@@ -20,8 +20,34 @@ int main()
 	{
 		return -1;
 	}
-	WSACleanup();
-	printf("OK!\n");
+	DWORD asize = 20000;
+	PIP_ADAPTER_ADDRESSES adapters;
+	do
+	{
+		adapters = (PIP_ADAPTER_ADDRESSES)malloc(asize);
+		if (!adapters)
+		{
+			printf("Can not allocate %ld bytes for adapters", asize);
+			return -1;
+		}
+		int r = GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, 0, adapters, &asize);
+		if (r == ERROR_BUFFER_OVERFLOW)
+		{
+			printf("GetAdaptersAddresses wantd %ld bytes.\n", asize);
+			free(adapters);
+		}
+		else if (r == ERROR_SUCCESS)
+		{
+			break;
+		}
+		else
+		{
+			printf(" Error from GetAdaptersAddresses: %d\n", r);
+			free(adapters);
+			WSACleanup();
+			return - 1;
+		}
+	} while (!adapters);
 	return 0;
 
 }
