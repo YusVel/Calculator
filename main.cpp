@@ -20,7 +20,7 @@ int main()
 	{
 		return -1;
 	}
-	DWORD asize = 20000;
+	DWORD asize = 4000;
 	PIP_ADAPTER_ADDRESSES adapters;
 	do
 	{
@@ -48,6 +48,8 @@ int main()
 			return - 1;
 		}
 	} while (!adapters);
+	printf("Adapters name: %s", adapters->FriendlyName);
+
 	return 0;
 
 }
